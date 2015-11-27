@@ -22,13 +22,78 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# Decorators are declared in the /decorators folder
+#
+# app/decorators/name.rb
+module Name
+  def full_name
+    "#{first_Name} #{last_name}"
+  end
+end
 
-## Development
+module PhoneNumber
+  def full_phone_number
+    "(#{area_code}) #{phone_number}"
+  end
+end
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+# a #decorate method is declared in the model, that lists the order of decorators
+# to be called on the instance. The name of this method must be the same across
+# multiple models in order to decorate the AR relationships
+#
+# /app/models/user.rb
+class User < ActiveRecord::Base
+  include composableDecorator
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+  decorate_with Name, PhoneNumber
+end
+
+# this is roughly the equivalent of wrapping the instance in first the Name decorator,
+# then the PhoneNumber decorator, i.e.
+class User < ActiveRecord::Base
+  extend Name
+  extend PhoneNumber
+  # more functionality runs here to work with AR relationships
+end
+
+# we can then decorate the model in the controller
+#
+# /app/controllers/users_controller.rb
+class UsersController
+  def show
+    ...
+    @user.decorate
+  end
+end
+
+# and we can access the decorated methods in the view
+#
+# /app/views/users/show.html.slim
+@user.full_name
+@user.full_phone_number
+
+# DELEGATIONS
+#
+# We can delegate the association's decorated methods to the model
+class Address < ActiveRecord::Base
+  include composableDecorator
+
+  decorate_with AddressDecorator
+end
+
+class User
+  include composableDecorator
+
+  decorate_with Name, PhoneNumber
+  delegate_decorated_to :address
+end
+
+# which delegates all the decorated methods created in Address#decorate to User
+#
+# /app/views/users/show.html.slim
+@user.address_simple_format
+```
 
 ## Contributing
 
