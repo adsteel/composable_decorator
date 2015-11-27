@@ -4,6 +4,15 @@
 
 A simple, composable decorator for Rails models.
 
+## Example
+```ruby
+class User < ActiveRecord::Base
+  include composableDecorator
+
+  decorate_with NameDecorator, PhoneNumberDecorator
+end
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
