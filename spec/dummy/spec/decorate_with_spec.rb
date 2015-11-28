@@ -14,8 +14,6 @@ describe '#decorate_with' do
 
     GivenModel do
       class Author < ActiveRecord::Base
-        include ComposableDecorator
-
         decorate_with AuthorDecorator
       end
     end

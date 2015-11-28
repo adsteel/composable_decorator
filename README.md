@@ -1,14 +1,10 @@
 # ComposableDecorator
 
--- work in progress. I would not rely on this gem yet. --
-
 A simple, composable decorator for Rails models.
 
 ## Example
 ```ruby
 class User < ActiveRecord::Base
-  include composableDecorator
-
   decorate_with NameDecorator, PhoneNumberDecorator
 end
 ```
@@ -53,8 +49,6 @@ end
 #
 # /app/models/user.rb
 class User < ActiveRecord::Base
-  include composableDecorator
-
   decorate_with Name, PhoneNumber
 end
 
@@ -86,14 +80,10 @@ end
 #
 # We can delegate the association's decorated methods to the model
 class Address < ActiveRecord::Base
-  include composableDecorator
-
   decorate_with AddressDecorator
 end
 
 class User
-  include composableDecorator
-
   decorate_with Name, PhoneNumber
   delegate_decorated_to :address
 end

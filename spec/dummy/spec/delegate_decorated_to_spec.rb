@@ -23,16 +23,12 @@ describe '#delegate_decorated_to' do
 
     GivenModel do
       class Author < ActiveRecord::Base
-        include ComposableDecorator
-
         decorate_with AuthorDecorator
       end
     end
 
     GivenModel do
       class Post < ActiveRecord::Base
-        include ComposableDecorator
-
         belongs_to :author
 
         decorate_with PostDecorator
