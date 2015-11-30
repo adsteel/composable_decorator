@@ -57,7 +57,6 @@ end
 class User < ActiveRecord::Base
   extend Name
   extend PhoneNumber
-  # more functionality runs here to work with AR relationships
 end
 
 # we can then decorate the model in the controller
