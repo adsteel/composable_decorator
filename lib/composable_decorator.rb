@@ -1,14 +1,8 @@
-require_relative "./composable_decorator/version"
-require_relative './composable_decorator/dsl'
-require_relative './composable_decorator/models'
-
-module ComposableDecorator
-end
+require_relative './composable_decorator/version'
+require_relative './composable_decorator/active_record/base'
 
 module ActiveRecord
   class Base
-    extend ComposableDecorator::DSL
-    include ComposableDecorator::Models
+    include ComposableDecorator::ActiveRecord::Base
   end
 end
-
