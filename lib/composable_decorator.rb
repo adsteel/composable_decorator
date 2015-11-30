@@ -1,14 +1,14 @@
 require_relative "./composable_decorator/version"
-require_relative './composable_decorator/class_methods'
-require_relative './composable_decorator/instance_methods'
+require_relative './composable_decorator/dsl'
+require_relative './composable_decorator/models'
 
 module ComposableDecorator
 end
 
 module ActiveRecord
   class Base
-    extend ComposableDecorator::ClassMethods
-    include ComposableDecorator::InstanceMethods
+    extend ComposableDecorator::DSL
+    include ComposableDecorator::Models
   end
 end
 
