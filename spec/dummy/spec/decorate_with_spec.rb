@@ -3,7 +3,7 @@ require 'rails_helper'
 describe '#decorate_with' do
   let(:author) { Author.create(first_name: 'First', last_name: 'Last') }
 
-  context 'decorating a single model' do
+  context 'given a model with a single decorator' do
     GivenDecorator do
       module AuthorDecorator
         def decorator_method
@@ -18,7 +18,7 @@ describe '#decorate_with' do
       end
     end
 
-    it 'adds the decorated methods' do
+    it 'adds the decorator\'s methods' do
       expect{ author.decorator_method }.to raise_error( NoMethodError )
 
       author.decorate
