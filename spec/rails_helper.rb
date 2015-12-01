@@ -1,3 +1,9 @@
+ENV['RAILS_ENV'] ||= 'test'
+
+require 'dummy/config/environment'
+
+abort("The Rails environment is running in production mode!") if Rails.env.production?
+
 module SpecDSL
   def GivenModel
     let!(:_saved_constant_names) { Object.constants }
@@ -19,13 +25,7 @@ module SpecDSL
 end
 
 RSpec.configure do |config|
-  config.expect_with :rspec do |expectations|
-    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
-  end
-
-  config.mock_with :rspec do |mocks|
-    mocks.verify_partial_doubles = true
-  end
-
   config.extend SpecDSL
 end
+
+ActiveRecord::Migration.maintain_test_schema!
