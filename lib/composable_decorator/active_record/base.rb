@@ -5,8 +5,6 @@ module ComposableDecorator
     module Base
       def self.included(mod)
         mod.extend DSL
-
-        mod.define_delegate_decorated_methods
       end
 
       def decorate

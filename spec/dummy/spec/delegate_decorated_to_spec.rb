@@ -15,6 +15,10 @@ describe '#delegate_decorated_to' do
 
     GivenDecorator do
       module PostDecorator
+        include ComposableDecorator
+
+        delegate_decorated_to :author
+
         def decorator_method
           "This is a decorator method"
         end
@@ -32,8 +36,6 @@ describe '#delegate_decorated_to' do
         belongs_to :author
 
         decorate_with PostDecorator
-
-        delegate_decorated_to :author
       end
     end
 
