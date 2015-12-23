@@ -30,23 +30,19 @@ module ComposableDecorator
       end
 
       private def __delegate_decorated_association_methods
-        __association_classes.each do |klass|
-          methods = __decorator_methods(klass)
+        __associations.each do |assoc|
+          methods = __decorator_methods(assoc)
 
           self.class.delegate(
             *methods,
-            to: klass.to_s.underscore,
+            to: assoc,
             prefix: __prefix,
             allow_nil: __allow_nil)
         end
       end
 
-      private def __decorator_methods(klass)
-        klass.new.decorators.map(&:instance_methods).flatten
-      end
-
-      private def __association_classes
-        __associations.map { |a| a.to_s.camelize.constantize }
+      private def __decorator_methods(assoc)
+        send(assoc).decorators.map(&:instance_methods).flatten
       end
     end
   end
