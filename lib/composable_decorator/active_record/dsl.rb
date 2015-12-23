@@ -37,18 +37,18 @@ module ComposableDecorator
       #
       # @Param +associations+ is an <Array> of symbols
       def delegate_decorated_to(*associations, prefix: true, allow_nil: true, handle_nil_with: '')
-        define_delegate_decorated_methods(
+        __define_delegation(
           associations: associations,
           prefix: prefix,
           allow_nil: allow_nil,
           handle_nil_with: handle_nil_with)
       end
 
-      def define_delegate_decorated_methods(associations: [], prefix: true, allow_nil: true, handle_nil_with: '')
-        define_method(:delegate_decorated_associations) { associations }
-        define_method(:delegate_decorated_prefix) { prefix }
-        define_method(:delegate_decorated_allow_nil) { allow_nil }
-        define_method(:delegate_decorated_handle_nil_with) { handle_nil_with }
+      def __define_delegation(associations: [], prefix: true, allow_nil: true, handle_nil_with: '')
+        define_method(:__associations) { associations }
+        define_method(:__prefix) { prefix }
+        define_method(:__allow_nil) { allow_nil }
+        define_method(:__handle_nil_with) { handle_nil_with }
       end
     end
   end

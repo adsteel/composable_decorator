@@ -6,51 +6,47 @@ module ComposableDecorator
       def self.included(mod)
         mod.extend DSL
 
-        mod.define_delegate_decorated_methods
+        mod.__define_delegation
       end
 
       def decorate
-        add_decorators
-        decorate_associations
-        delegate_decorated_association_methods
+        __add_decorators
+        __decorate_associations
+        __delegate_decorated_association_methods
 
         self
       end
 
-      private def add_decorators
+      private def __add_decorators
         decorators.each do |decorator|
           extend(decorator)
         end
       end
 
-      private def decorate_associations
-        method_delegate_decorated_associations.each do |assoc|
+      private def __decorate_associations
+        __associations.each do |assoc|
           public_send(assoc).try(:decorate)
         end
       end
 
-      private def delegate_decorated_association_methods
-        class_delegate_decorated_associations.each do |klass|
-          methods = class_decorated_methods(klass)
+      private def __delegate_decorated_association_methods
+        __association_classes.each do |klass|
+          methods = __decorator_methods(klass)
 
           self.class.delegate(
             *methods,
             to: klass.to_s.underscore,
-            prefix: delegate_decorated_prefix,
-            allow_nil: delegate_decorated_allow_nil)
+            prefix: __prefix,
+            allow_nil: __allow_nil)
         end
       end
 
-      private def class_decorated_methods(klass)
+      private def __decorator_methods(klass)
         klass.new.decorators.map(&:instance_methods).flatten
       end
 
-      private def class_delegate_decorated_associations
-        delegate_decorated_associations.map { |a| a.to_s.camelize.constantize }
-      end
-
-      private def method_delegate_decorated_associations
-        delegate_decorated_associations
+      private def __association_classes
+        __associations.map { |a| a.to_s.camelize.constantize }
       end
     end
   end
