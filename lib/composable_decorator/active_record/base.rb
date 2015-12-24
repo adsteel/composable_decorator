@@ -18,7 +18,7 @@ module ComposableDecorator
       end
 
       private def __add_decorators
-        decorators.each do |decorator|
+        __decorators.each do |decorator|
           extend(decorator)
         end
       end
@@ -41,12 +41,16 @@ module ComposableDecorator
         end
       end
 
-      private def __decorator_methods(assoc)
-        __association_instance(assoc).decorators.map(&:instance_methods).flatten
+      private def __decorators
+        self.class.decorators
       end
 
-      private def __association_instance(assoc)
-        self.class.reflect_on_association(assoc).build_association({})
+      private def __decorator_methods(assoc)
+        __association_class(assoc).decorators.map(&:instance_methods).flatten
+      end
+
+      private def __association_class(assoc)
+        self.class.reflect_on_association(assoc).klass
       end
     end
   end
