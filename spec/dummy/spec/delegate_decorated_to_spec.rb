@@ -31,8 +31,6 @@ describe '#delegate_decorated_to' do
       class Post < ActiveRecord::Base
         belongs_to :author
 
-        decorate_with PostDecorator
-
         delegate_decorated_to :author
       end
     end

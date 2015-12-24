@@ -7,6 +7,7 @@ module ComposableDecorator
         mod.extend DSL
 
         mod.__define_delegation
+        mod.__initialize_decorators
       end
 
       def decorate
