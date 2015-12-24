@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20151224164954) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "store_id"
+    t.integer  "author_id"
   end
 
   create_table "posts", force: :cascade do |t|

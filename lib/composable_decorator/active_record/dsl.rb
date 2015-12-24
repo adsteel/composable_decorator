@@ -43,23 +43,19 @@ module ComposableDecorator
       #
       # @Param +associations+ is an <Array> of symbols
       def delegate_decorated_to(*associations, prefix: true, allow_nil: true, handle_nil_with: '')
+        existing_associations = __associations
+
         __define_delegation(
-          associations: associations,
+          associations: associations + existing_associations,
           prefix: prefix,
           allow_nil: allow_nil,
           handle_nil_with: handle_nil_with)
       end
 
       def __define_delegation(associations: [], prefix: true, allow_nil: true, handle_nil_with: '')
-        __define_associations(associations)
+        define_singleton_method(:__associations) { associations }
         define_method(:__prefix) { prefix }
         define_method(:__allow_nil) { allow_nil }
-      end
-
-      def __define_associations(associations)
-        existing_associations = defined?(__associations) ? __associations : []
-
-        define_method(:__associations) { associations + existing_associations }
       end
     end
   end

@@ -46,6 +46,10 @@ module ComposableDecorator
         self.class.__decorators
       end
 
+      private def __associations
+        self.class.__associations
+      end
+
       private def __decorator_methods(assoc)
         __association_class(assoc).__decorators.map(&:instance_methods).flatten
       end
