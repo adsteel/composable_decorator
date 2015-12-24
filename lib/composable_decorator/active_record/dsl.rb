@@ -51,10 +51,15 @@ module ComposableDecorator
       end
 
       def __define_delegation(associations: [], prefix: true, allow_nil: true, handle_nil_with: '')
-        define_method(:__associations) { associations }
+        __define_associations(associations)
         define_method(:__prefix) { prefix }
         define_method(:__allow_nil) { allow_nil }
-        define_method(:__handle_nil_with) { handle_nil_with }
+      end
+
+      def __define_associations(associations)
+        existing_associations = defined?(__associations) ? __associations : []
+
+        define_method(:__associations) { associations + existing_associations }
       end
     end
   end
