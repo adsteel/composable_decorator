@@ -42,11 +42,11 @@ module ComposableDecorator
       end
 
       private def __decorators
-        self.class.decorators
+        self.class.__decorators
       end
 
       private def __decorator_methods(assoc)
-        __association_class(assoc).decorators.map(&:instance_methods).flatten
+        __association_class(assoc).__decorators.map(&:instance_methods).flatten
       end
 
       private def __association_class(assoc)
