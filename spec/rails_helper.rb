@@ -24,6 +24,8 @@ module SpecDSL
   end
 
   alias_method :GivenDecorator, :GivenModel
+  alias_method :GivenDecorators, :GivenModel
+  alias_method :GivenModels, :GivenModel
 end
 
 RSpec.configure do |config|
