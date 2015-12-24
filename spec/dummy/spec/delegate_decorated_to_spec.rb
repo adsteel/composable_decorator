@@ -48,6 +48,48 @@ describe '#delegate_decorated_to' do
     end
   end
 
+  context 'given an option of no prefix' do
+    GivenModel do
+      class Author < ActiveRecord::Base
+        decorate_with AuthorDecorator
+      end
+    end
+
+    GivenModel do
+      class Post < ActiveRecord::Base
+        belongs_to :author
+
+        delegate_decorated_to :author, prefix: false
+      end
+    end
+
+    it 'delegates the associations\'s decorated methods without a prefix' do
+      expect( post.decorate.decorator_method ).to eq('Author decorator method!')
+    end
+  end
+
+  context 'given an option of allow_nil: false' do
+    let(:post) { Post.create(name: 'Post with no author') }
+
+    GivenModel do
+      class Author < ActiveRecord::Base
+        decorate_with AuthorDecorator
+      end
+    end
+
+    GivenModel do
+      class Post < ActiveRecord::Base
+        belongs_to :author
+
+        delegate_decorated_to :author, allow_nil: false
+      end
+    end
+
+    it 'raises an error when called' do
+      expect{ post.decorate.author_decorator_method }.to raise_error(Module::DelegationError)
+    end
+  end
+
   context 'given a custom belongs_to association' do
     GivenModel do
       class Author < ActiveRecord::Base
