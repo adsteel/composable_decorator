@@ -78,5 +78,13 @@ describe '#delegate_decorated_to' do
     it 'delegates the associations\'s decorated methods' do
       expect{ post.decorate.my_author_decorator_method }.not_to raise_error
     end
+
+    context 'and a nil association record' do
+      let(:post) { Post.create(name: 'Post with no author') }
+
+      it 'returns nil for the delegated method' do
+        expect(post.decorate.my_author_decorator_method).to eq(nil)
+      end
+    end
   end
 end

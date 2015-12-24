@@ -42,7 +42,11 @@ module ComposableDecorator
       end
 
       private def __decorator_methods(assoc)
-        send(assoc).decorators.map(&:instance_methods).flatten
+        __association_instance(assoc).decorators.map(&:instance_methods).flatten
+      end
+
+      private def __association_instance(assoc)
+        self.class.reflect_on_association(assoc).build_association({})
       end
     end
   end
