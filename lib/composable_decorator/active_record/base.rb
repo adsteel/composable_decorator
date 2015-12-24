@@ -7,6 +7,7 @@ module ComposableDecorator
         mod.extend DSL
 
         mod.__define_delegation
+        mod.__initialize_decorators
       end
 
       def decorate
@@ -43,6 +44,10 @@ module ComposableDecorator
 
       private def __decorators
         self.class.__decorators
+      end
+
+      private def __associations
+        self.class.__associations
       end
 
       private def __decorator_methods(assoc)

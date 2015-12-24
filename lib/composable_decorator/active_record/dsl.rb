@@ -12,9 +12,13 @@ module ComposableDecorator
       #
       # @Param +decorators+ is an <Array> of classes
       def decorate_with(*decorators)
-        existing_decorators = defined?(__decorators) ? __decorators : []
+        existing_decorators = __decorators
 
         define_singleton_method(:__decorators) { decorators + existing_decorators }
+      end
+
+      def __initialize_decorators
+        define_singleton_method(:__decorators) { [] }
       end
 
       # # delegates all of the decorated methods for each has_one or belongs_to association.
@@ -39,18 +43,19 @@ module ComposableDecorator
       #
       # @Param +associations+ is an <Array> of symbols
       def delegate_decorated_to(*associations, prefix: true, allow_nil: true, handle_nil_with: '')
+        existing_associations = __associations
+
         __define_delegation(
-          associations: associations,
+          associations: associations + existing_associations,
           prefix: prefix,
           allow_nil: allow_nil,
           handle_nil_with: handle_nil_with)
       end
 
       def __define_delegation(associations: [], prefix: true, allow_nil: true, handle_nil_with: '')
-        define_method(:__associations) { associations }
+        define_singleton_method(:__associations) { associations }
         define_method(:__prefix) { prefix }
         define_method(:__allow_nil) { allow_nil }
-        define_method(:__handle_nil_with) { handle_nil_with }
       end
     end
   end
