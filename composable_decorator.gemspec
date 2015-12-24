@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["adamgsteel@gmail.com"]
 
   spec.summary       = %q{A simple, composable decorator pattern for Ruby.}
+  spec.description   = %q{Supports decorator composition and inheritance in ActiveRecord.}
   spec.homepage      = "https://www.github.com/adsteel/composable_decorator"
   spec.license       = "MIT"
 
@@ -26,11 +27,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rails", '~> 4.2.5'
+  spec.add_dependency "rails", '~> 4.2'
 
   spec.add_development_dependency "bundler", "~> 1.10"
-  spec.add_development_dependency "pry"
+  spec.add_development_dependency "pry", "~> 0.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec"
-  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "rspec", "~> 3"
+  spec.add_development_dependency "sqlite3", "~> 1.3"
 end
