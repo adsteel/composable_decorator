@@ -75,6 +75,24 @@ end
 @user.full_name
 @user.full_phone_number
 
+# decorators are inherited
+#
+#
+module HatDecorator
+  def hat_decorated_method
+    "hat decorator method"
+  end
+end
+
+class Hat < ActiveRecord::Base
+  decorate_with HatDecorator
+end
+
+class Stetson < Hat
+end
+
+Stetson.new.decorate.hat_decorator_method #=> "hat decorator method"
+
 # DELEGATIONS
 #
 # We can delegate the association's decorated methods to the model
@@ -83,7 +101,6 @@ class Address < ActiveRecord::Base
 end
 
 class User
-  decorate_with Name, PhoneNumber
   delegate_decorated_to :address
 end
 

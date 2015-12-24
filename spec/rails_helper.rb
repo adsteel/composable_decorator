@@ -4,6 +4,8 @@ require 'dummy/config/environment'
 
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 
+require 'pry'
+
 module SpecDSL
   def GivenModel
     let!(:_saved_constant_names) { Object.constants }
