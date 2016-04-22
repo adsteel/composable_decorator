@@ -27,40 +27,37 @@ Or install it yourself as:
 
 ## Usage
 
+Decorators are declared as modules.
+
 ```ruby
-# Decorators are declared in the /decorators folder
-#
-# app/decorators/name.rb
-module Name
+module NameDecorator
   def full_name
     "#{first_Name} #{last_name}"
   end
 end
+```
 
-module PhoneNumber
-  def full_phone_number
-    "(#{area_code}) #{phone_number}"
-  end
-end
+A `#decorate_with` method is called in the model that lists the order of decorators to be added to the instance.
 
-# a #decorate method is declared in the model, that lists the order of decorators
-# to be called on the instance. The name of this method must be the same across
-# multiple models in order to decorate the AR relationships
-#
+```ruby
 # /app/models/user.rb
 class User < ActiveRecord::Base
-  decorate_with Name, PhoneNumber
+  decorate_with NameDecorator, PhoneNumberDecorator
 end
+```
 
-# this is roughly the equivalent of wrapping the instance in first the Name decorator,
-# then the PhoneNumber decorator, i.e.
+This is roughly the equivalent of wrapping the instance in first the Name decorator, then the PhoneNumber decorator, i.e.:
+
+```ruby
 class User < ActiveRecord::Base
-  extend Name
-  extend PhoneNumber
+  extend NameDecorator
+  extend PhoneNumberDecorator
 end
+```
 
-# we can then decorate the model in the controller
-#
+We can then decorate the model in the controller and access the decorated methods in the view.
+
+```ruby
 # /app/controllers/users_controller.rb
 class UsersController
   def show
@@ -69,15 +66,15 @@ class UsersController
   end
 end
 
-# and we can access the decorated methods in the view
-#
 # /app/views/users/show.html.slim
 @user.full_name
 @user.full_phone_number
 
-# decorators are inherited
-#
-#
+```
+
+Decorators are inherited
+
+```ruby
 module HatDecorator
   def hat_decorated_method
     "hat decorator method"
@@ -92,10 +89,20 @@ class Stetson < Hat
 end
 
 Stetson.new.decorate.hat_decorator_method #=> "hat decorator method"
+```
 
-# DELEGATIONS
-#
-# We can delegate the association's decorated methods to the model
+
+### Delegating an association's decorated methods
+
+We can delegate the association's decorated methods to the instance all at once.
+
+```ruby
+module AddressDecorator
+  def simple_format
+    "#{street}, #{city}"
+  end
+end
+
 class Address < ActiveRecord::Base
   decorate_with AddressDecorator
 end
@@ -104,10 +111,8 @@ class User
   delegate_decorated_to :address
 end
 
-# which delegates all the decorated methods created in Address#decorate to User
-#
 # /app/views/users/show.html.slim
-@user.address_simple_format
+User.find(1).decorate.address_simple_format
 ```
 
 ## Contributing
