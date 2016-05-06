@@ -17,8 +17,10 @@ module ComposableDecorator
         define_singleton_method(:__decorators) { decorators + existing_decorators }
       end
 
-      def __initialize_decorators
+      def __initialize
         define_singleton_method(:__decorators) { [] }
+        define_singleton_method(:__associations) { [] }
+        define_singleton_method(:__delegations) { [] }
       end
 
       # # delegates all of the decorated methods for each has_one or belongs_to association.
@@ -46,16 +48,26 @@ module ComposableDecorator
         existing_associations = __associations
 
         __define_delegation(
-          associations: associations + existing_associations,
+          associations: associations,
           prefix: prefix,
           allow_nil: allow_nil,
           handle_nil_with: handle_nil_with)
+
+        define_singleton_method(:__associations) { associations + existing_associations }
       end
 
       def __define_delegation(associations: [], prefix: true, allow_nil: true, handle_nil_with: '')
-        define_singleton_method(:__associations) { associations }
-        define_method(:__prefix) { prefix }
-        define_method(:__allow_nil) { allow_nil }
+        existing_delegations = __delegations
+
+        define_singleton_method(:__delegations) {
+          [
+            {
+              associations: associations,
+              prefix: prefix,
+              allow_nil: allow_nil
+            }
+          ] + existing_delegations
+        }
       end
     end
   end

@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe '#delegate_decorated_to' do
   let(:author) { Author.create(first_name: 'First', last_name: 'Last') }
-  let(:post) { Post.create(name: 'Example Post', author_id: author.id) }
+  let(:publication) { Publication.create(name: 'Example publication') }
+  let(:post) { Post.create(name: 'Example Post', author_id: author.id, publication_id: publication.id) }
 
   GivenDecorator do
     module AuthorDecorator
@@ -16,6 +17,14 @@ describe '#delegate_decorated_to' do
     module PostDecorator
       def decorator_method
         "Post decorator method!"
+      end
+    end
+  end
+
+  GivenDecorator do
+    module PublicationDecorator
+      def decorator_method
+        "Publication decorator method!"
       end
     end
   end
@@ -43,8 +52,43 @@ describe '#delegate_decorated_to' do
       end
     end
 
+    GivenModel do
+      class Publication < ActiveRecord::Base
+        decorate_with PublicationDecorator
+      end
+    end
+
     it 'delegates the associations\'s decorated methods' do
       expect{ post.decorate.author_decorator_method }.not_to raise_error
+    end
+  end
+
+  context 'given multiple declarations with different options' do
+    GivenModel do
+      class Author < ActiveRecord::Base
+        decorate_with AuthorDecorator
+      end
+    end
+
+    GivenModel do
+      class Publication < ActiveRecord::Base
+        decorate_with PublicationDecorator
+      end
+    end
+
+    GivenModel do
+      class Post < ActiveRecord::Base
+        belongs_to :author
+        belongs_to :publication
+
+        delegate_decorated_to :author
+        delegate_decorated_to :publication, prefix: false
+      end
+    end
+
+    it 'preserves the options of each' do
+      expect(post.decorate.decorator_method).to eq('Publication decorator method!')
+      expect(post.decorate.author_decorator_method).to eq('Author decorator method!')
     end
   end
 
@@ -52,6 +96,12 @@ describe '#delegate_decorated_to' do
     GivenModel do
       class Author < ActiveRecord::Base
         decorate_with AuthorDecorator
+      end
+    end
+
+    GivenModel do
+      class Publication < ActiveRecord::Base
+        decorate_with PublicationDecorator
       end
     end
 
