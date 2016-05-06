@@ -7,6 +7,9 @@ A simple, composable decorator for Rails models.
 class User < ActiveRecord::Base
   decorate_with NameDecorator, PhoneNumberDecorator
 end
+
+@user = User.find(1).decorate
+@user.full_name # => "Jane Smith"
 ```
 
 ## Installation
