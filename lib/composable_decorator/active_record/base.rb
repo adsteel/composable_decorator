@@ -6,14 +6,13 @@ module ComposableDecorator
       def self.included(mod)
         mod.extend DSL
 
-        mod.__define_delegation
-        mod.__initialize_decorators
+        mod.__initialize
       end
 
       def decorate
         __add_decorators
         __decorate_associations
-        __delegate_decorated_association_methods
+        __delegate_decorated_associations
 
         self
       end
@@ -30,15 +29,21 @@ module ComposableDecorator
         end
       end
 
-      private def __delegate_decorated_association_methods
-        __associations.each do |assoc|
+      private def __delegate_decorated_associations
+        __delegations.each do |delegation|
+          __delegate_decorated_association_group(delegation)
+        end
+      end
+
+      private def __delegate_decorated_association_group(delegation)
+        delegation[:associations].each do |assoc|
           methods = __decorator_methods(assoc)
 
           self.class.delegate(
             *methods,
             to: assoc,
-            prefix: __prefix,
-            allow_nil: __allow_nil)
+            prefix: delegation[:prefix],
+            allow_nil: delegation[:allow_nil])
         end
       end
 
@@ -48,6 +53,10 @@ module ComposableDecorator
 
       private def __associations
         self.class.__associations
+      end
+
+      private def __delegations
+        self.class.__delegations
       end
 
       private def __decorator_methods(assoc)
