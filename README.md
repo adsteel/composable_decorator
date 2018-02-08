@@ -1,4 +1,6 @@
-# ComposableDecorator
+# ComposableDecorator - DEPRECATED
+
+> Note: This gem is no longer being maintained.
 
 A simple, composable decorator for Rails models.
 
